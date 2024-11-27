@@ -55,6 +55,8 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 vim.opt.inccommand = 'split'
 
+vim.opt.signcolumn = 'yes'
+
 vim.wo.number = true
 
 vim.cmd [[ set noswapfile ]]

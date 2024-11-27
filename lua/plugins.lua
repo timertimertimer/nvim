@@ -1,6 +1,6 @@
 require("lazy").setup({
-    require 'colorschemes',
     'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+    require 'colorschemes',
     require 'configs.treesitter',
     require 'configs.which-key',
     require 'configs.gitsigns',
@@ -8,4 +8,4 @@ require("lazy").setup({
     require 'configs.neo-tree',
 })
 
-vim.cmd [[ colorscheme catppuccin ]]
+vim.cmd [[ colorscheme material ]]
