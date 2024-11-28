@@ -57,6 +57,8 @@ vim.opt.inccommand = 'split'
 
 vim.opt.signcolumn = 'yes'
 
+vim.opt.showmode = false
+
 vim.wo.number = true
 
 vim.cmd [[ set noswapfile ]]
