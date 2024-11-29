@@ -1,10 +1,3 @@
-vim.api.nvim_create_autocmd("VimEnter", {
-  pattern = "*",
-  callback = function()
-    require("neo-tree.command").execute({ toggle = true, dir = vim.loop.cwd() })
-  end,
-})
-
 return {
   'nvim-neo-tree/neo-tree.nvim',
   version = '*',
@@ -15,13 +8,13 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<C-n>', ':Neotree filesystem toggle left<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<leader>bf', ":Neotree buffers reveal float<CR>", desc = "NeoTree buffers refeal", silent = true }
   },
   opts = {
     filesystem = {
       window = {
         mappings = {
-          ['\\'] = 'close_window',
         },
       },
       filtered_items = {

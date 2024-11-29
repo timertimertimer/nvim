@@ -3,10 +3,10 @@ require("lazy").setup({
     'tpope/vim-commentary',
     'williamboman/mason.nvim',
     'neovim/nvim-lspconfig',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/nvim-cmp',
 
     require 'colorschemes',
+    require 'configs.alpha-nvim',
+    require 'configs.completions',
     require 'configs.treesitter',
     require 'configs.which-key',
     require 'configs.gitsigns',

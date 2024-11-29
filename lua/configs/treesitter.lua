@@ -1,5 +1,5 @@
 return {
-        { -- Highlight, edit, and navigate code
+  {       -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
@@ -11,5 +11,5 @@ return {
       },
     },
   },
-   'nvim-treesitter/nvim-treesitter-context',
+  'nvim-treesitter/nvim-treesitter-context',
 }
