@@ -2,7 +2,7 @@ vim.api.nvim_set_keymap('n', 'y', '"+y', { noremap = true })
 vim.api.nvim_set_keymap('n', 'yy', '"+yy', { noremap = true })
 vim.api.nvim_set_keymap('v', 'y', '"+y', { noremap = true })
 
--- cut 
+-- cut
 vim.api.nvim_set_keymap('n', 'x', '"_x', { noremap = true })
 vim.api.nvim_set_keymap('v', 'x', '"+d', { noremap = true })
 
