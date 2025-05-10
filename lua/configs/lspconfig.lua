@@ -23,75 +23,82 @@ return {
     config = function()
       local lsp_defaults = require('lspconfig').util.default_config
 
-      -- Add cmp_nvim_lsp capabilities settings to lspconfig
-      -- This should be executed before you configure any language server
       lsp_defaults.capabilities = vim.tbl_deep_extend(
         'force',
         lsp_defaults.capabilities,
         require('cmp_nvim_lsp').default_capabilities()
       )
 
-      -- LspAttach is where you enable features that only work
-      -- if there is a language server active in the file
       vim.api.nvim_create_autocmd('LspAttach', {
-        desc = 'LSP actions',
+        group = vim.api.nvim_create_augroup('lsp_attach_config', { clear = true }),
+        desc = 'LSP actions and Ruff hover disable',
         callback = function(event)
+          local client = vim.lsp.get_client_by_id(event.data.client_id)
           local opts = { buffer = event.buf }
 
-          vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-          vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-          vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-          vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-          vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
-          vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-          vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
-          vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-          vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
-          vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>',
-            vim.tbl_extend('force', opts, { desc = 'Show code actions' }))
-        end
-      })
+          if client then
+            if client.name == 'ruff' then
+              client.server_capabilities.hoverProvider = false
+            end
+            if client.name == 'pyright' then
+              client.server_capabilities.hoverProvider = true
+            end
 
-      vim.api.nvim_create_autocmd("LspAttach", {
-        group = vim.api.nvim_create_augroup('lsp_attach_disable_ruff_hover', { clear = true }),
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if client == nil then
-            return
-          end
-          if client.name == 'ruff' then
-            -- Disable hover in favor of Pyright
-            client.server_capabilities.hoverProvider = false
+            vim.bo[event.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+            vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+            vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+            vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+            vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+            vim.keymap.set('n', 'go', vim.lsp.buf.type_definition, opts)
+            vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+            vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
+            vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, opts)
+            vim.keymap.set({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
+            vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
           end
         end,
-        desc = 'LSP: Disable hover capability from Ruff',
       })
 
       require('mason-lspconfig').setup({
-        ensure_installed = { 'lua_ls', 'pyright', 'ruff' },
+        ensure_installed = {
+          'lua_ls',
+          'pyright',
+          -- 'ruff',
+          'ts_ls', 'eslint',
+        },
         handlers = {
-          -- this first function is the "default handler"
-          -- it applies to every language server without a "custom handler"
           function(server_name)
-            require('lspconfig')[server_name].setup({})
+            require('lspconfig')[server_name].setup {}
+          end,
+          ['pyright'] = function()
+            require('lspconfig').pyright.setup {
+              filetypes = { "python" },
+              settings = {
+                pyright = {
+                  disableOrganizeImports = true, -- Используем Ruff для организации импортов
+                },
+                python = {
+                  analysis = {
+                    ignore = { '*' }, -- Полностью полагаемся на Ruff для диагностики
+                  },
+                },
+              },
+            }
+          end,
+          ['lua_ls'] = function()
+            require('lspconfig').lua_ls.setup {
+              settings = {
+                Lua = {
+                  runtime = { version = 'LuaJIT' },
+                  diagnostics = { globals = { 'vim' } },
+                  workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+                  telemetry = { enable = false },
+                },
+              },
+            }
           end,
         }
       })
-
-      require('lspconfig').pyright.setup {
-        settings = {
-          pyright = {
-            -- Using Ruff's import organizer
-            disableOrganizeImports = true,
-          },
-          python = {
-            analysis = {
-              -- Ignore all files for analysis to exclusively use Ruff for linting
-              ignore = { '*' },
-            },
-          },
-        },
-      }
-    end
-  }
+    end,
+  },
 }

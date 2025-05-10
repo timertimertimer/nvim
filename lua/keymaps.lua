@@ -1,3 +1,4 @@
+-- copy
 vim.api.nvim_set_keymap('n', 'y', '"+y', { noremap = true })
 vim.api.nvim_set_keymap('n', 'yy', '"+yy', { noremap = true })
 vim.api.nvim_set_keymap('v', 'y', '"+y', { noremap = true })
@@ -15,14 +16,14 @@ vim.api.nvim_set_keymap('n', '<C-s>', '<cmd>w!<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<C-q>', '<cmd>q!<cr>', { noremap = true })
 
 -- split
-vim.api.nvim_set_keymap('n', 'sv', '<cmd>vplit<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', 'sv', '<cmd>vsplit<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', 'ss', '<cmd>split<cr>', { noremap = true })
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = 'Open diagnostic quickfix list' })
 
 -- Exit terminal mode in the builtin terminal
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
@@ -52,3 +53,6 @@ vim.keymap.set('n', '<A-j>', ":m .+1<CR>==", { silent = true })
 vim.keymap.set('n', '<A-k>', ":m .-2<CR>==", { silent = true })
 vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv", { silent = true })
 vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv", { silent = true })
+
+-- close current buffer
+vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Close current window', silent = true })

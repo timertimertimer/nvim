@@ -5,6 +5,8 @@ return {
     return {
       sources = {
         null_ls.builtins.formatting.black,
+        -- null_ls.builtins.diagnostics.ruff,
+        null_ls.builtins.formatting.prettierd
       },
       on_attach = function(client, bufnr)
         if client.supports_method("textDocument/formatting") then

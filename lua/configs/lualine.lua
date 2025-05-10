@@ -4,14 +4,14 @@ return {
     options = {
     icons_enabled = true,
     theme = 'material',
-  },
-  sections = {
-    lualine_a = {
-      {
-        'filename',
-        path = 1,
+    },
+    sections = {
+      lualine_a = {
+        {
+          'filename',
+          path = 1,
+        }
       }
     }
-  }
   }
 }
